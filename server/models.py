@@ -133,7 +133,9 @@ def validates_class(self, key, c_class):
 
 @validates('level')
 def validates_level(self, key, level):
-    if level < 0 and level >= 20:
+    if not level:
+        raise ValueError('level must be provided.')
+    elif level < 0 and level >= 20:
         raise ValueError('level must be between 1 and 20.')
     return level
 
@@ -159,6 +161,12 @@ class User(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     
+@validates('name')
+def validates_name(self, key, name):
+    if not name:
+        raise ValueError('name must be provided.')
+    return name
+    
 @validates('username')
 def validates_username(self, key, username):
     users = User.query.all()
@@ -167,4 +175,6 @@ def validates_username(self, key, username):
         raise ValueError('username must be provided.')
     elif username in usernames:
         raise ValueError('username already exists.')
+    elif len(username) < 0 and len(username) >= 16:
+        raise ValueError('username must be between 1 and 16 characters.')
     return username
