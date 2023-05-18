@@ -186,5 +186,53 @@ class Characters(Resource):
         return response
 
 api.add_resource(Characters, '/characters')
+
+class CharactersById(Resource):
+    
+    def get(self, id):
+        character = Character.query.filter_by(id=id).first()
+        
+        if not character:
+            return make_response({
+                'error': 'character not found.'
+            }, 404)
+        
+        response = make_response(
+            character.to_dict(),
+            200
+            )
+        
+        return response
+    
+    def patch(self, id):
+        character = Character.query.filter_by(id=id).first()
+        data = request.get_json()
+        
+        for attr in data:
+            setattr(character, attr, data[attr])
+        
+        db.session.add(character)
+        db.session.commit()
+        
+        response = make_response(
+            character.to_dict(),
+            202
+        )
+        
+        return response
+    
+    def delete(self, id):
+        character = Character.query.filter_by(id=id).first()
+        
+        if not character:
+            return make_response({
+                'error': 'character not found.'
+            }, 404)
+            
+        db.session.delete(character)
+        db.session.commit()
+
+api.add_resource(CharactersById, '/characters<int:id>')
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
