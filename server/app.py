@@ -93,6 +93,34 @@ class CampaignsById(Resource):
 
 api.add_resource(CampaignsById, '/campaigns<int:id>')
 
+class CampaignUsers(Resource):
+    
+    def post(self):
+        data = request.get_json()
+        
+        try:
+            campaign_user = CampaignUser(
+                user_id=data['user_id'],
+                campaign_id=data['campaign_id']
+            )
+            
+            db.session.add(campaign_user)
+            db.session.commit()
+            
+        except Exception as ex:
+            return make_response({
+                'errors': [ex.__str__()]
+            }, 422)
+        
+        response = make_response(
+            campaign_user.campaign.to_dict(),
+            201
+        )
+        
+        return response
+
+api.add_resource(CampaignUsers, '/campaign_users')
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
