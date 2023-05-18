@@ -234,5 +234,20 @@ class CharactersById(Resource):
 
 api.add_resource(CharactersById, '/characters<int:id>')
 
+class Users(Resource):
+    
+    def get(self):
+        users = User.query.all()
+        users_dict_list = [user.to_dict() for user in users]
+        
+        response = make_response(
+            users_dict_list,
+            200
+        )
+        
+        return response
+
+api.add_resource(Users, '/users')
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
