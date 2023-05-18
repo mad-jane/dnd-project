@@ -249,5 +249,52 @@ class Users(Resource):
 
 api.add_resource(Users, '/users')
 
+class UsersById(Resource):
+    
+    def get(self, id):
+        user = User.query.filter_by(id=id).first()
+        
+        if not user:
+            return make_response({
+                'error': 'user not found.'
+            }, 404)
+        
+        response = make_response(
+            user.to_dict(),
+            200
+            )
+        
+        return response
+    
+    def patch(self, id):
+        user = User.query.filter_by(id=id).first()
+        data = request.get_json()
+        
+        for attr in data:
+            setattr(user, attr, data[attr])
+        
+        db.session.add(user)
+        db.session.commit()
+        
+        response = make_response(
+            user.to_dict(),
+            202
+        )
+        
+        return response
+    
+    def delete(self, id):
+        user = User.query.filter_by(id=id).first()
+        
+        if not user:
+            return make_response({
+                'error': 'user not found.'
+            }, 404)
+            
+        db.session.delete(user)
+        db.session.commit()
+        
+api.add_resource(UsersById, '/users<int:id>')
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
