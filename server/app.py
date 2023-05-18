@@ -149,5 +149,42 @@ class CampaignCharacters(Resource):
     
 api.add_resource(CampaignCharacters, '/campaign_characters')
 
+class Characters(Resource):
+    
+    def get(self):
+        characters = Character.query.all()
+        characters_dict_list = [character.to_dict() for character in characters]
+        
+        response = make_response(
+            characters_dict_list,
+            200
+        )
+    
+    def post(self):
+        data = request.get_json()
+        try:
+            character = Character(
+                name=data['name'],
+                race=data['race'],
+                c_class=data['c_class'],
+                level=data['level']
+            )
+            
+            db.session.add(character)
+            db.session.commit()
+        
+        except Exception as ex:
+            return make_response({
+                'errors': [ex.__str__()]
+            }, 422)
+            
+        response = make_response(
+            character.to_dict(),
+        201
+        )
+        
+        return response
+
+api.add_resource(Characters, '/characters')
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
