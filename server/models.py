@@ -14,6 +14,9 @@ class Campaign(db.Model, SerializerMixin):
     game_master = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    
+    campaign_characters = db.relationship('CampaignCharacter', backref='campaign')
+    characters = association_proxy('campaign_characters', 'character')
 
 @validates('title')
 def validates_title(self, key, title):
@@ -42,7 +45,7 @@ class CampaignCharacter(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     character_id = db.Column(db.Integer, db.ForeignKey('characters.id'))
     campaign_id = db.Column(db.Integer, db.ForeignKey('campaigns.id'))
-    # avatar = db.Column(db.String)
+    avatar = db.Column(db.String)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -112,6 +115,9 @@ class Character(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    
+    campaign_characters = db.relationship('CampaignCharacter', backref='character')
+    campaigns = association_proxy('campaign_characters', 'campaign')
 
 @validates('name')
 def validates_name(self, key, name):
@@ -160,6 +166,9 @@ class User(db.Model, SerializerMixin):
     profile_pic = db.Column(db.String)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    
+    campaign_user = db.relationship('CampaignUser', backref='user')
+    campaigns = association_proxy('campaign_users', 'campaign')
     
 @validates('name')
 def validates_name(self, key, name):

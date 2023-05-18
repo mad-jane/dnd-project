@@ -258,7 +258,7 @@ characters_list = [
 
 def make_users():
     
-    User.query.Delete()
+    User.query.delete()
     
     users = []
     
@@ -288,7 +288,7 @@ def make_characters():
             race=character_dict['race'],
             c_class=character_dict['c_class'],
             level=character_dict['level'],
-            user_id=rc(users)[0]
+            # user_id=rc(users)[0]
         )
         characters.append(character)
         
@@ -298,7 +298,7 @@ def make_characters():
 def make_campaigns():
     
     Campaign.query.delete()
-    campaigns = Campaign.query.with_entities(campaign.id).all()
+    campaigns = Campaign.query.with_entities(Campaign.id).all()
     
     campaigns = []
     
@@ -307,6 +307,8 @@ def make_campaigns():
             title=campaign_dict['title'],
             game_master=campaign_dict['game_master']
         )
+        campaigns.append(campaign)
+        
     db.session.add_all(campaigns)
     db.session.commit()
 
