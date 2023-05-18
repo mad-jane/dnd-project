@@ -125,7 +125,7 @@ def validates_race(self, key, race):
         raise ValueError('race must be provided.')
     return race
 
-@validates('class')
+@validates('c_class')
 def validates_class(self, key, c_class):
     if not c_class:
         raise ValueError('class must be provided.')
@@ -153,6 +153,7 @@ class User(db.Model, SerializerMixin):
     serialize_rules = ('-created_at', '-updated_at')
     
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
     username = db.Column(db.String, nullable=False, unique=True)
     profile_pic = db.Column(db.String)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
