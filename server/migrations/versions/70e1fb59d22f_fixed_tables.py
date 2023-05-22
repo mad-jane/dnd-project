@@ -1,8 +1,8 @@
-"""create tables
+"""fixed tables
 
-Revision ID: 43a6b66600c0
+Revision ID: 70e1fb59d22f
 Revises: 
-Create Date: 2023-05-18 14:35:03.713946
+Create Date: 2023-05-22 14:38:41.589073
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '43a6b66600c0'
+revision = '70e1fb59d22f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,6 +21,7 @@ def upgrade():
     op.create_table('campaigns',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(), nullable=False),
+    sa.Column('image', sa.String(), nullable=True),
     sa.Column('game_master', sa.String(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
@@ -53,6 +54,8 @@ def upgrade():
     sa.Column('race', sa.String(), nullable=False),
     sa.Column('c_class', sa.String(), nullable=False),
     sa.Column('level', sa.Integer(), nullable=False),
+    sa.Column('image', sa.String(), nullable=True),
+    sa.Column('description', sa.String(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),

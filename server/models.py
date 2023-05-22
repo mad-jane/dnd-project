@@ -11,6 +11,7 @@ class Campaign(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False, unique=True)
+    image = db.Column(db.String)
     game_master = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -37,6 +38,12 @@ def validates_game_master(self, key, game_master):
     elif game_master in game_masters:
         raise ValueError('game_master already exists.')
     return game_master
+
+@validates('description')
+def validates_description(self, key, description):
+    if description >= 5000:
+        raise ValueError('exceeded 5,000 character limit.')
+    return description
 
 class CampaignCharacter(db.Model, SerializerMixin):
     __tablename__ = 'campaign_characters'
@@ -112,6 +119,8 @@ class Character(db.Model, SerializerMixin):
     race = db.Column(db.String, nullable=False)
     c_class = db.Column(db.String, nullable=False)
     level = db.Column(db.Integer, nullable=False)
+    image = db.Column(db.String)
+    description = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -166,7 +175,6 @@ class User(db.Model, SerializerMixin):
     profile_pic = db.Column(db.String)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
-    
     campaign_user = db.relationship('CampaignUser', backref='user')
     campaigns = association_proxy('campaign_users', 'campaign')
     

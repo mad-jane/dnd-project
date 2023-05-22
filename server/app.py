@@ -159,6 +159,7 @@ class Characters(Resource):
             characters_dict_list,
             200
         )
+        return response
     
     def post(self):
         data = request.get_json()

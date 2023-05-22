@@ -14,6 +14,7 @@ migrations = "*"
 sqlalchemy = "*"
 "sqlalchemy.orm" = "*"
 faker = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
